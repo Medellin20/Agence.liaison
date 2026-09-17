@@ -15,7 +15,7 @@ export default async function AdminBankSettingsPage() {
       <div>
         <h1 className="text-2xl font-extrabold text-ink-900">Configuration bancaire</h1>
         <div className="mt-6 flex items-start gap-3 rounded-2xl border border-brick-200 bg-brick-50 p-5 text-sm text-brick-700">
-          <AlertTriangle classNaCme="mt-0.5 h-5 w-5 shrink-0" />
+          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
           <div>
             <p className="font-semibold">Configuration introuvable</p>
             <p className="mt-1 text-brick-600">

@@ -19,7 +19,7 @@ const CATEGORIES = [
       {
         question: 'Dois-je payer pour envoyer une demande ?',
         answer:
-          'Votre demande est enregistrée avant le paiement. Une dernière étape affiche le lien de paiement configuré par l’agence. Après le paiement, envoyez une capture justificative à contacts@alpenia-residences.com en précisant votre référence.',
+          'Votre demande est enregistrée avant le paiement. Une dernière étape affiche le lien de paiement configuré par l’agence. Après le paiement, envoyez une capture justificative à contacts@agncliaison.com en précisant votre référence.',
       },
       {
         question: 'Puis-je changer la date de ma visite ?',

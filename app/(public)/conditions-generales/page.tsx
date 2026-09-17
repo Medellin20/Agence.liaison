@@ -30,7 +30,7 @@ export default function ConditionsGeneralesPage() {
       <p>
         Après l’enregistrement de la demande de visite ou de réservation, une dernière étape
         présente le lien de paiement lorsqu’il est disponible. Après le paiement, le client envoie
-        une capture d’écran justificative à contacts@alpenia-residences.com avec la référence
+        une capture d’écran justificative à contacts@agncliaison.com avec la référence
         de sa demande. Agence.liaison vérifie le justificatif avant de confirmer la suite du dossier.
       </p>
 

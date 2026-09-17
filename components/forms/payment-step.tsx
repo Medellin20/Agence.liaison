@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 
 export async function PaymentStep({ reference }: { reference: string }) {
   const { paymentUrl } = await getPaymentSettings();
-  const email = 'contacts@alpenia-residences.com';
+  const email = 'contacts@agncliaison.com';
   const subject = encodeURIComponent(`Justificatif de paiement — ${reference}`);
   return (
     <section aria-labelledby="payment-heading" className="mt-6 space-y-4 rounded-xl border border-canal-200 bg-canal-50 p-5 text-left">

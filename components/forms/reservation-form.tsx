@@ -51,7 +51,7 @@ export function ReservationForm({
   async function goNext() {
     const fieldsByStep: (keyof ReservationInput)[][] = [
       ['firstName', 'lastName', 'email', 'phone'],
-      ['desiredMoveInDate', 'durationDays', 'occupantsCount', 'hasPets'],
+      ['desiredMoveInDate', 'occupantsCount', 'hasPets'],
     ];
     const valid = await trigger(fieldsByStep[step]);
     if (valid) setStep((s) => Math.min(s + 1, STEPS.length - 2));
@@ -150,11 +150,6 @@ export function ReservationForm({
                   <FieldError message={errors.desiredMoveInDate?.message} />
                 </div>
                 <div>
-                  <Label htmlFor="durationDays">Durée du séjour (jours)</Label>
-                  <Input id="durationDays" type="number" min={1} max={365} {...register('durationDays')} />
-                  <FieldError message={errors.durationDays?.message} />
-                </div>
-                <div>
                   <Label htmlFor="occupantsCount">Nombre d’occupants</Label>
                   <Select id="occupantsCount" {...register('occupantsCount')}>
                     {Array.from({ length: 20 }, (_, index) => index + 1).map((count) => (
@@ -189,7 +184,6 @@ export function ReservationForm({
                 <Row label="Nom" value={`${values.firstName || ''} ${values.lastName || ''}`.trim() || '—'} />
                 <Row label="E-mail" value={values.email || '—'} />
                 <Row label="Date de réservation" value={values.desiredMoveInDate || '—'} />
-                <Row label="Durée" value={values.durationDays ? `${values.durationDays} jour${values.durationDays > 1 ? 's' : ''}` : '—'} />
                 <Row label="Nombre d’occupants" value={String(values.occupantsCount || '—')} />
                 <Row label="Animaux de compagnie" value={values.hasPets ? 'Oui' : 'Non'} />
               </div>

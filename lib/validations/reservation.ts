@@ -11,7 +11,8 @@ export const reservationSchema = z.object({
     .number()
     .int()
     .min(1, 'La durée minimale est de 1 jour.')
-    .max(365, 'Merci de contacter l’agence pour un séjour supérieur à un an.'),
+    .max(365, 'Merci de contacter l’agence pour un séjour supérieur à un an.')
+    .default(7),
   occupantsCount: z.coerce
     .number()
     .int()

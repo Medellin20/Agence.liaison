@@ -57,6 +57,26 @@ function find(node, predicate) {
     if (match) return match;
   }
 }
+test('ReservationForm: omitted duration defaults to seven days', () => {
+  const context = { exports: {}, require: name => {
+    assert.equal(name, 'zod');
+    return require('zod');
+  } };
+  vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/validations/reservation.ts', 'utf8'), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
+  }).outputText, context);
+  const parsed = context.exports.reservationSchema.parse({
+    propertyId: '00000000-0000-4000-8000-000000000000',
+    firstName: 'Jean',
+    lastName: 'Dupont',
+    email: 'jean@example.com',
+    phone: '+33612345678',
+    desiredMoveInDate: '2026-10-03',
+    occupantsCount: 1,
+    hasPets: false,
+  });
+  assert.equal(parsed.durationDays, 7);
+});
 for (const [file, name] of [
   ['viewing-request-form', 'ViewingRequestForm'],
   ['reservation-form', 'ReservationForm'],
@@ -71,6 +91,9 @@ for (const [file, name] of [
       await next.props.onClick();
       tree = flow.render();
       assert.equal(flow.sends(), 0);
+      if (name === 'ReservationForm' && step === 0) {
+        assert.equal(find(tree, node => node.props?.id === 'durationDays'), undefined);
+      }
     }
     let prevented = false;
     find(tree, node => node.type === 'form').props.onSubmit({ preventDefault: () => { prevented = true; } });

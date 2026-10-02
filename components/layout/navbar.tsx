@@ -11,7 +11,6 @@ import {
   Info,
   Mail,
   Menu,
-  Search,
   User,
   Workflow,
   X,
@@ -133,9 +132,9 @@ export function Navbar() {
             Mon compte
           </Link>
           <Button asChild size="md">
-            <Link href="/appartements">
-              <Search className="h-4 w-4" />
-              Découvrir nos biens
+            <Link href="/contact">
+              <Mail className="h-4 w-4" />
+              Parler de mon projet
             </Link>
           </Button>
           <div ref={tabletMenuRef} className="relative min-[1400px]:hidden">

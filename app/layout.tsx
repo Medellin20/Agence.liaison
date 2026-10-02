@@ -16,33 +16,32 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Agence.liaison — Biens à louer en France',
+    default: 'Agence.liaison — Votre projet immobilier en France',
     template: '%s | Agence.liaison',
   },
   description:
-    'Découvrez nos chalets, villas, appartements meublés et mobil-homes à louer en France.',
+    'Un accompagnement immobilier dédié aux clients néerlandais pour louer ou acheter un appartement ou une maison partout en France.',
   keywords: [
-    'location chalet France',
-    'location villa France',
-    'location appartement meublé',
-    'location mobil-home',
-    'chalet Alpes',
-    'villa Côte d’Azur',
+    'immobilier France clients néerlandais',
+    'achat immobilier France',
+    'location appartement France',
+    'maison avec jardin France',
+    'accompagnement immobilier néerlandais',
     'Agence.liaison',
   ],
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
     siteName: 'Agence.liaison',
-    title: 'Agence.liaison — Biens à louer en France',
+    title: 'Agence.liaison — Votre projet immobilier en France',
     description:
-      'Recherchez, visitez et réservez votre prochain logement en toute confiance.',
+      'Un accompagnement dédié aux clients néerlandais pour trouver un bien à louer ou à acheter partout en France.',
     url: siteUrl,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Agence.liaison — Biens à louer en France',
-    description: 'Trouvez votre prochain logement en France.',
+    title: 'Agence.liaison — Votre projet immobilier en France',
+    description: 'Trouvez un appartement ou une maison à louer ou à acheter en France, avec un accompagnement dédié.',
   },
   robots: {
     index: true,

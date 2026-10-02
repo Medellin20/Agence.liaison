@@ -10,7 +10,7 @@ import { Select } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Badge, StatusDot } from '@/components/ui/badge';
 import { EmptyState } from '@/components/ui/empty-state';
-import { DESTINATION_CITIES, PROPERTY_STATUS_LABELS, PROPERTY_TYPES } from '@/lib/utils/constants';
+import { DESTINATION_CITIES, isMonthlyRentalProperty, PROPERTY_STATUS_LABELS, PROPERTY_TYPES } from '@/lib/utils/constants';
 import { formatPrice } from '@/lib/utils/format';
 
 export const metadata: Metadata = { title: 'Tous les biens' };
@@ -119,7 +119,7 @@ export default async function AdminPropertiesPage({
                         </div>
                       </td>
                       <td className="px-4 py-3 text-ink-600"><span className="line-clamp-2">{property.city}</span></td>
-                      <td className="whitespace-nowrap px-4 py-3 font-medium text-ink-800">{formatPrice(property.monthly_price)} / {property.property_type === 'furnished_studio' ? 'mois' : 'semaine'}</td>
+                      <td className="whitespace-nowrap px-4 py-3 font-medium text-ink-800">{formatPrice(property.monthly_price)} / {isMonthlyRentalProperty(property.property_type) ? 'mois' : 'semaine'}</td>
                       <td className="px-4 py-3">
                         <Badge variant={property.is_published ? 'available' : 'default'}>
                           {property.is_published ? 'Publié' : 'Brouillon'}
@@ -150,7 +150,7 @@ export default async function AdminPropertiesPage({
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-semibold text-ink-900">{property.title}</p>
                       <p className="text-xs text-ink-400">{property.city}</p>
-                      <p className="mt-0.5 text-sm font-medium text-ink-700">{formatPrice(property.monthly_price)} / {property.property_type === 'furnished_studio' ? 'mois' : 'semaine'}</p>
+                      <p className="mt-0.5 text-sm font-medium text-ink-700">{formatPrice(property.monthly_price)} / {isMonthlyRentalProperty(property.property_type) ? 'mois' : 'semaine'}</p>
                     </div>
                     <Badge className="shrink-0" variant={property.is_published ? 'available' : 'default'}>
                       {property.is_published ? 'Publié' : 'Brouillon'}

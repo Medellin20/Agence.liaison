@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, ArrowRight, Mountain, Sun, Compass, Building2, Caravan } from 'lucide-react';
+import { MapPin, ArrowRight, Mountain, Sun, Compass, Building2, Caravan, House } from 'lucide-react';
 import { PropertyGrid } from '@/components/properties/property-grid';
 import { PropertyFilters } from '@/components/properties/property-filters';
 import { Pagination } from '@/components/properties/pagination';
@@ -95,6 +95,9 @@ export default async function AppartementsPage({ searchParams }: PageProps) {
 function CatalogueHeader({ city, propertyType }: { city?: string; propertyType?: string }) {
   const categories = [
     { label: 'Toutes les destinations', type: '', icon: Compass },
+    { label: 'Appartements T2', type: 'apartment_t2', icon: Building2 },
+    { label: 'Appartements T3', type: 'apartment_t3', icon: Building2 },
+    { label: 'Maisons', type: 'house', icon: House },
     { label: 'Nos chalets', type: 'chalet', icon: Mountain },
     { label: 'Nos villas', type: 'villa', icon: Sun },
     { label: 'Appartements meublés', type: 'furnished_studio', icon: Building2 },
@@ -105,7 +108,7 @@ function CatalogueHeader({ city, propertyType }: { city?: string; propertyType?:
       <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-32 h-96 w-96 rounded-full border-[60px] border-white/[0.04]" />
       <p className="relative text-xs font-semibold uppercase tracking-[0.24em] text-canal-200">La collection Agence.liaison</p>
       <h1 className="relative mt-5 max-w-3xl text-3xl font-bold leading-tight tracking-tight sm:text-5xl">
-        {city ? <>Une parenthèse à <span className="font-serif font-normal italic text-canal-200">{city}.</span></> : propertyType === 'chalet' ? <>L’esprit chalet.<br /><span className="font-serif font-normal italic text-canal-200">La montagne pour horizon.</span></> : propertyType === 'villa' ? <>L’art de la villa.<br /><span className="font-serif font-normal italic text-canal-200">Du soleil, de l’espace.</span></> : propertyType === 'furnished_studio' ? <>Un appartement prêt à vivre.<br /><span className="font-serif font-normal italic text-canal-200">Meublé pour votre confort.</span></> : propertyType === 'mobile_home' ? <>L’esprit plein air.<br /><span className="font-serif font-normal italic text-canal-200">Découvrez nos mobil-homes.</span></> : <>Des lieux à découvrir.<br /><span className="font-serif font-normal italic text-canal-200">Des séjours à imaginer.</span></>}
+        {city ? <>Une parenthèse à <span className="font-serif font-normal italic text-canal-200">{city}.</span></> : propertyType === 'apartment_t2' ? <>Appartements T2.<br /><span className="font-serif font-normal italic text-canal-200">Une chambre, un nouveau départ.</span></> : propertyType === 'apartment_t3' ? <>Appartements T3.<br /><span className="font-serif font-normal italic text-canal-200">De l’espace pour votre projet.</span></> : propertyType === 'house' ? <>Maisons en France.<br /><span className="font-serif font-normal italic text-canal-200">Deux à trois chambres.</span></> : propertyType === 'chalet' ? <>L’esprit chalet.<br /><span className="font-serif font-normal italic text-canal-200">La montagne pour horizon.</span></> : propertyType === 'villa' ? <>L’art de la villa.<br /><span className="font-serif font-normal italic text-canal-200">Du soleil, de l’espace.</span></> : propertyType === 'furnished_studio' ? <>Un appartement prêt à vivre.<br /><span className="font-serif font-normal italic text-canal-200">Meublé pour votre confort.</span></> : propertyType === 'mobile_home' ? <>L’esprit plein air.<br /><span className="font-serif font-normal italic text-canal-200">Découvrez nos mobil-homes.</span></> : <>Des lieux à découvrir.<br /><span className="font-serif font-normal italic text-canal-200">Des séjours à imaginer.</span></>}
       </h1>
       <p className="relative mt-5 max-w-xl text-sm leading-7 text-white/75 sm:text-base">{city ? 'Trouvez le logement qui vous ressemble dans cette destination.' : 'Chalets, villas, appartements meublés et mobil-homes : trouvez votre prochaine adresse en France.'}</p>
       <nav aria-label="Collections de logements" className="relative mt-8 flex flex-wrap gap-2">

@@ -17,11 +17,20 @@ export const DESTINATION_CITIES = [
 export type DestinationCity = (typeof DESTINATION_CITIES)[number];
 
 export const PROPERTY_TYPES = [
+  { value: 'apartment_t2', label: 'Appartement T2' },
+  { value: 'apartment_t3', label: 'Appartement T3' },
+  { value: 'house', label: 'Maison' },
   { value: 'chalet', label: 'Chalet' },
   { value: 'villa', label: 'Villa' },
   { value: 'furnished_studio', label: 'Appartement meublé' },
   { value: 'mobile_home', label: 'Mobil-home' },
 ] as const;
+
+export const NEW_PROPERTY_TYPES = PROPERTY_TYPES.slice(0, 3);
+
+export function isMonthlyRentalProperty(type: string) {
+  return ['apartment_t2', 'apartment_t3', 'house', 'furnished_studio'].includes(type);
+}
 
 export const PROPERTY_STATUS_LABELS: Record<string, { label: string; colorClass: string }> = {
   draft: { label: 'Brouillon', colorClass: 'bg-status-draft' },

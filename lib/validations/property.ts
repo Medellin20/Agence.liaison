@@ -7,7 +7,7 @@ export const propertySchema = z.object({
     .trim()
     .min(5, 'Le slug doit contenir au moins 5 caractères.')
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Le slug ne doit contenir que des minuscules, chiffres et tirets.'),
-  propertyType: z.enum(['chalet', 'villa', 'furnished_studio', 'mobile_home']),
+  propertyType: z.enum(['apartment_t2', 'apartment_t3', 'house', 'chalet', 'villa', 'furnished_studio', 'mobile_home']),
 
   surfaceM2: z.coerce.number().positive('La surface doit être supérieure à 0.').optional(),
   city: z.string().trim().min(2, 'Merci d’indiquer la ville du bien.'),
@@ -47,6 +47,27 @@ export const propertySchema = z.object({
 
   amenityIds: z.array(z.string().uuid()).default([]),
 }).superRefine((data, ctx) => {
+  if (data.propertyType === 'apartment_t2' && data.bedrooms !== 1) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['bedrooms'], message: 'Un T2 doit comporter 1 chambre.' });
+  }
+  if (data.propertyType === 'apartment_t3' && data.bedrooms !== 2) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['bedrooms'], message: 'Un T3 doit comporter 2 chambres.' });
+  }
+  if (data.propertyType === 'apartment_t2' && data.rooms !== 2) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['rooms'], message: 'Un T2 doit comporter 2 pièces principales.' });
+  }
+  if (data.propertyType === 'apartment_t3' && data.rooms !== 3) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['rooms'], message: 'Un T3 doit comporter 3 pièces principales.' });
+  }
+  if (data.propertyType === 'house' && (data.bedrooms < 2 || data.bedrooms > 3)) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['bedrooms'], message: 'Une maison proposée ici doit comporter 2 à 3 chambres.' });
+  }
+  if (['apartment_t2', 'apartment_t3', 'house'].includes(data.propertyType) && !data.surfaceM2) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['surfaceM2'], message: 'Indiquez la surface du bien.' });
+  }
+  if (['apartment_t2', 'apartment_t3', 'house'].includes(data.propertyType) && data.contractType !== 'Location au mois') {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['contractType'], message: 'Sélectionnez une location au mois.' });
+  }
   if (data.propertyType === 'furnished_studio') {
     if (!data.isFurnished) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['isFurnished'], message: 'Un appartement meublé doit être déclaré meublé.' });
     if (data.interiorType !== 'Meublé') ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['interiorType'], message: 'Sélectionnez un intérieur meublé.' });

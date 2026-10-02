@@ -300,6 +300,8 @@ Pour une base existante, exécuter `supabase/migrations/20260917_add_property_ca
 
 Dans **Admin → Nos biens → Ajouter un bien**, choisir la catégorie, renseigner les caractéristiques et tarifs, puis créer le brouillon. Ajouter les photos sur la fiche obtenue, cocher **Publié** et enregistrer pour rendre l'annonce visible. Les collections de l'accueil et du catalogue affichent les biens publiés dans la catégorie correspondante.
 
+Les nouvelles annonces immobilières se créent dans les catégories **Appartement T2**, **Appartement T3** et **Maison**. Sur une base déjà installée, exécuter `supabase/migrations/20261002_apartment_house_categories.sql` dans le SQL Editor Supabase. Cette migration ajoute les valeurs à l’énumération `property_type` sans modifier les annonces existantes ; les données sont enregistrées dans la table `properties` et les photos dans `property_images`. Pour une base vide, suivre d’abord l’installation complète de la base décrite plus haut (`schema.sql`, `rls_policies.sql`, `seed.sql`).
+
 - Appartement meublé : surface obligatoire, loyer et charges au mois, dépôt de garantie distinct, intérieur meublé imposé.
 - Mobil-home : surface obligatoire, tarif à la semaine, dépôt de garantie et forfait ménage distincts.
 - Les champs historiques `monthly_price`, `service_charges`, `deposit_amount`, `viewing_fee` et `minimum_stay_months` sont conservés ; leur signification dépend de la catégorie. Les chalets et villas conservent leurs tarifs saisonniers.

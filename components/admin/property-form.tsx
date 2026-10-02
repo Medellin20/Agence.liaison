@@ -16,7 +16,7 @@ import { Select } from '@/components/ui/select';
 import { Label, FieldError } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { PROPERTY_TYPES } from '@/lib/utils/constants';
+import { NEW_PROPERTY_TYPES, PROPERTY_TYPES } from '@/lib/utils/constants';
 import { slugify } from '@/lib/utils/format';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import type { Amenity, Property, PropertyType } from '@/types/database';
@@ -74,7 +74,7 @@ export function PropertyForm({
   property,
   currentAmenityIds,
   amenities,
-  initialType = 'chalet',
+  initialType = 'apartment_t2',
 }: {
   mode: 'create' | 'edit';
   propertyId?: string;
@@ -119,10 +119,11 @@ export function PropertyForm({
             serviceCharges: 0,
             depositAmount: 0,
             viewingFee: 0,
-            bedrooms: initialType === 'furnished_studio' ? 0 : 1,
+            bedrooms: initialType === 'apartment_t2' ? 1 : initialType === 'apartment_t3' ? 2 : initialType === 'house' ? 2 : initialType === 'furnished_studio' ? 0 : 1,
+            rooms: initialType === 'apartment_t2' ? 2 : initialType === 'apartment_t3' ? 3 : undefined,
             bathrooms: 1,
-            contractType: initialType === 'furnished_studio' ? 'Location au mois' : 'Location saisonnière à la semaine',
-            interiorType: 'Meublé',
+            contractType: ['apartment_t2', 'apartment_t3', 'house', 'furnished_studio'].includes(initialType) ? 'Location au mois' : 'Location saisonnière à la semaine',
+            interiorType: ['apartment_t2', 'apartment_t3', 'house'].includes(initialType) ? 'Non meublé' : 'Meublé',
             maintenanceCondition: 'Bien',
             hasElevator: false,
             hasBalcony: false,
@@ -130,7 +131,7 @@ export function PropertyForm({
             hasParking: false,
             hasGarage: false,
             hasGarden: false,
-            isFurnished: true,
+            isFurnished: ['apartment_t2', 'apartment_t3', 'house'].includes(initialType) ? false : true,
             minimumStayMonths: 1,
             status: 'draft',
             isPublished: false,
@@ -142,17 +143,23 @@ export function PropertyForm({
   const propertyType = watch('propertyType');
   const isVilla = propertyType === 'villa';
   const isStudio = propertyType === 'furnished_studio';
-  const isSimplePricing = isStudio || propertyType === 'mobile_home';
+  const isApartment = ['apartment_t2', 'apartment_t3', 'furnished_studio'].includes(propertyType);
+  const isHouseOrApartment = ['apartment_t2', 'apartment_t3', 'house', 'furnished_studio'].includes(propertyType);
+  const isSimplePricing = isHouseOrApartment || propertyType === 'mobile_home';
   const previousType = React.useRef(propertyType);
   React.useEffect(() => {
     if (previousType.current === propertyType) return;
     previousType.current = propertyType;
-    setValue('isFurnished', true);
-    setValue('interiorType', 'Meublé');
-    setValue('contractType', isStudio ? 'Location au mois' : 'Location saisonnière à la semaine');
+    const isResidential = ['apartment_t2', 'apartment_t3', 'house'].includes(propertyType);
+    setValue('isFurnished', !isResidential);
+    setValue('interiorType', isResidential ? 'Non meublé' : 'Meublé');
+    setValue('contractType', ['apartment_t2', 'apartment_t3', 'house', 'furnished_studio'].includes(propertyType) ? 'Location au mois' : 'Location saisonnière à la semaine');
+    if (propertyType === 'apartment_t2') { setValue('bedrooms', 1); setValue('rooms', 2); }
+    if (propertyType === 'apartment_t3') { setValue('bedrooms', 2); setValue('rooms', 3); }
+    if (propertyType === 'house') { setValue('bedrooms', 2); setValue('rooms', undefined); }
     // Les anciens tarifs saisonniers ne deviennent pas des charges ou une caution.
     for (const field of ['monthlyPrice', 'depositAmount', 'serviceCharges', 'viewingFee'] as const) setValue(field, 0);
-  }, [propertyType, isStudio, setValue]);
+  }, [propertyType, setValue]);
   const title = watch('title');
   const slug = watch('slug');
   const debouncedSlug = useDebouncedValue(slug, 250);
@@ -237,7 +244,7 @@ export function PropertyForm({
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <Label htmlFor="title">Titre</Label>
-            <Input id="title" placeholder={isStudio ? 'Ex : Appartement meublé à Annecy' : propertyType === 'mobile_home' ? 'Ex : Mobil-home avec terrasse près de la mer' : 'Ex : Chalet familial avec sauna à La Clusaz'} {...register('title')} />
+            <Input id="title" placeholder={propertyType === 'apartment_t2' ? 'Ex : Appartement T2 à Annecy' : propertyType === 'apartment_t3' ? 'Ex : Appartement T3 à Lyon' : propertyType === 'house' ? 'Ex : Maison avec jardin en Dordogne' : isStudio ? 'Ex : Appartement meublé à Annecy' : propertyType === 'mobile_home' ? 'Ex : Mobil-home avec terrasse près de la mer' : 'Ex : Chalet familial avec sauna à La Clusaz'} {...register('title')} />
             <FieldError message={errors.title?.message} />
             {slugStatus === 'taken' && (
               <div
@@ -295,7 +302,7 @@ export function PropertyForm({
           <div>
             <Label htmlFor="propertyType">Catégorie</Label>
             <Select id="propertyType" {...register('propertyType')}>
-              {PROPERTY_TYPES.map((t) => (
+              {(mode === 'create' ? NEW_PROPERTY_TYPES : PROPERTY_TYPES).map((t) => (
                 <option key={t.value} value={t.value}>
                   {t.label}
                 </option>
@@ -343,9 +350,9 @@ export function PropertyForm({
       <FormSection title="Tarifs de location">
         <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-xl border border-canal-100 bg-canal-50/60 p-3.5">
-            <Label htmlFor="monthlyPrice" className="min-h-5">{isStudio ? 'Loyer hors charges' : propertyType === 'mobile_home' ? 'Tarif de location' : isVilla ? 'Juillet – août' : 'Hors saison'}</Label>
+            <Label htmlFor="monthlyPrice" className="min-h-5">{isHouseOrApartment ? 'Loyer hors charges' : propertyType === 'mobile_home' ? 'Tarif de location' : isVilla ? 'Juillet – août' : 'Hors saison'}</Label>
             <Input id="monthlyPrice" type="number" inputMode="decimal" min="0" step="0.01" {...register('monthlyPrice')} />
-            <p className="mt-1.5 text-xs text-ink-400">{isStudio ? '€ par mois' : '€ par semaine'}</p>
+            <p className="mt-1.5 text-xs text-ink-400">{isHouseOrApartment ? '€ par mois' : '€ par semaine'}</p>
             <FieldError message={errors.monthlyPrice?.message} />
           </div>
           <div className="rounded-xl border border-canal-100 bg-canal-50/60 p-3.5">
@@ -361,13 +368,13 @@ export function PropertyForm({
             <p className="mt-1.5 text-xs text-ink-400">{isSimplePricing ? '€' : '€ par semaine'}</p>
           </div>
           <div className="rounded-xl border border-canal-100 bg-canal-50/60 p-3.5">
-            <Label htmlFor="serviceCharges" className="min-h-5">{isStudio ? 'Charges mensuelles' : isVilla ? 'Mai – début juin' : 'Forfait ménage'}</Label>
+            <Label htmlFor="serviceCharges" className="min-h-5">{isHouseOrApartment ? 'Charges mensuelles' : isVilla ? 'Mai – début juin' : 'Forfait ménage'}</Label>
             <Input id="serviceCharges" type="number" inputMode="decimal" min="0" step="0.01" {...register('serviceCharges')} />
             <FieldError message={errors.serviceCharges?.message} />
-            <p className="mt-1.5 text-xs text-ink-400">{isStudio ? '€ par mois' : isVilla ? '€ par semaine' : '€ par séjour'}</p>
+            <p className="mt-1.5 text-xs text-ink-400">{isHouseOrApartment ? '€ par mois' : isVilla ? '€ par semaine' : '€ par séjour'}</p>
           </div>
         </div>
-        <p className="mt-3 text-xs text-ink-400">{isSimplePricing ? 'Le dépôt de garantie et les frais sont des montants distincts du loyer. Renseignez 0 si non applicable.' : 'Indiquez les montants à la semaine. Le premier tarif doit être supérieur à 0. Les autres peuvent rester à 0 lorsqu’ils ne sont pas proposés.'}</p>
+        <p className="mt-3 text-xs text-ink-400">{isHouseOrApartment ? 'Indiquez le loyer mensuel hors charges. Le dépôt de garantie et les charges sont des montants distincts.' : isSimplePricing ? 'Le dépôt de garantie et les frais sont des montants distincts du tarif de location. Renseignez 0 si non applicable.' : 'Indiquez les montants à la semaine. Le premier tarif doit être supérieur à 0. Les autres peuvent rester à 0 lorsqu’ils ne sont pas proposés.'}</p>
       </FormSection>
 
       {/* CARACTÉRISTIQUES */}
@@ -389,14 +396,14 @@ export function PropertyForm({
             <FieldError message={errors.bathrooms?.message} />
           </div>
           <div>
-            <Label htmlFor="floor">{isStudio ? 'Étage du logement' : 'Nombre d’étages'}</Label>
+            <Label htmlFor="floor">{isApartment ? 'Étage du logement' : 'Nombre d’étages'}</Label>
             <Input id="floor" type="number" min={0} step={1} placeholder="Non renseigné" {...register('floor')} />
             <FieldError message={errors.floor?.message} />
-            <p className="mt-1.5 text-xs text-ink-400">{isStudio ? '0 pour le rez-de-chaussée.' : '0 pour un bien de plain-pied.'}</p>
+            <p className="mt-1.5 text-xs text-ink-400">{isApartment ? '0 pour le rez-de-chaussée.' : '0 pour un bien de plain-pied.'}</p>
           </div>
           <div>
-            <Label htmlFor="rooms">Pièces / espaces</Label>
-            <Input id="rooms" type="number" {...register('rooms')} />
+            <Label htmlFor="rooms">{propertyType === 'apartment_t2' || propertyType === 'apartment_t3' ? 'Pièces principales' : 'Pièces / espaces'}</Label>
+            <Input id="rooms" type="number" readOnly={propertyType === 'apartment_t2' || propertyType === 'apartment_t3'} {...register('rooms')} />
             <FieldError message={errors.rooms?.message} />
           </div>
           <div>
@@ -405,7 +412,7 @@ export function PropertyForm({
             <FieldError message={errors.availableFrom?.message} />
           </div>
           <div>
-            <Label htmlFor="minimumStayMonths">{isStudio ? 'Durée minimale (mois)' : 'Séjour minimum (semaines)'}</Label>
+            <Label htmlFor="minimumStayMonths">{isHouseOrApartment ? 'Durée minimale (mois)' : 'Séjour minimum (semaines)'}</Label>
             <Input id="minimumStayMonths" type="number" {...register('minimumStayMonths')} />
             <FieldError message={errors.minimumStayMonths?.message} />
           </div>
@@ -426,7 +433,7 @@ export function PropertyForm({
           <div>
             <Label htmlFor="contractType">Type de contrat</Label>
             <Select id="contractType" {...register('contractType')}>
-              {isStudio ? <option value="Location au mois">Location au mois</option> : <>
+              {isHouseOrApartment ? <option value="Location au mois">Location au mois</option> : <>
               <option value="Location saisonnière à la semaine">Location à la semaine</option>
               {propertyType !== 'mobile_home' && <><option value="Location saisonnière au week-end">Location au week-end</option>
               <option value="Location temporaire">Location temporaire</option></>}

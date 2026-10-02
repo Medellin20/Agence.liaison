@@ -3,7 +3,7 @@
 //   npx supabase gen types typescript --project-id <votre-projet> > types/database.ts
 
 export type PropertyStatus = 'draft' | 'available' | 'reserved' | 'rented' | 'unavailable';
-export type PropertyType = 'chalet' | 'villa' | 'furnished_studio' | 'mobile_home';
+export type PropertyType = 'apartment_t2' | 'apartment_t3' | 'house' | 'chalet' | 'villa' | 'furnished_studio' | 'mobile_home';
 
 export type ViewingStatus =
   | 'pending'

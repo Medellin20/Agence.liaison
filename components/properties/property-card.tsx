@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight, BedDouble, Bath, MapPin, Mountain, Sun, Camera, Building2, Caravan } from 'lucide-react';
+import { ArrowUpRight, BedDouble, Bath, MapPin, Mountain, Sun, Camera, Building2, Caravan, House } from 'lucide-react';
 import type { PropertyWithRelations } from '@/types/database';
 import { StatusDot } from '@/components/ui/badge';
 import { FavoriteButton } from '@/components/properties/favorite-button';
-import { PROPERTY_STATUS_LABELS, PROPERTY_TYPES } from '@/lib/utils/constants';
+import { isMonthlyRentalProperty, PROPERTY_STATUS_LABELS, PROPERTY_TYPES } from '@/lib/utils/constants';
 import { formatPrice } from '@/lib/utils/format';
 
 export function PropertyCard({ property }: { property: PropertyWithRelations }) {
@@ -12,7 +12,9 @@ export function PropertyCard({ property }: { property: PropertyWithRelations }) 
   const statusMeta = PROPERTY_STATUS_LABELS[property.status];
   const isVilla = property.property_type === 'villa';
   const isStudio = property.property_type === 'furnished_studio';
-  const TypeIcon = isStudio ? Building2 : property.property_type === 'mobile_home' ? Caravan : isVilla ? Sun : Mountain;
+  const isApartment = ['apartment_t2', 'apartment_t3', 'furnished_studio'].includes(property.property_type);
+  const isMonthly = isMonthlyRentalProperty(property.property_type);
+  const TypeIcon = isApartment ? Building2 : property.property_type === 'house' ? House : property.property_type === 'mobile_home' ? Caravan : isVilla ? Sun : Mountain;
   const highlights = property.amenities.slice(0, 2);
 
   return (
@@ -64,8 +66,8 @@ export function PropertyCard({ property }: { property: PropertyWithRelations }) 
         </div>
         <div className="mt-auto flex items-end justify-between gap-3 border-t border-ink-100 pt-4">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-700">{isStudio ? 'Loyer hors charges' : property.property_type === 'mobile_home' ? 'Location' : isVilla ? 'Juillet – août' : 'Hors saison'}</p>
-            <p className="mt-1 flex flex-wrap items-baseline gap-x-1.5 text-ink-950"><span className="text-2xl font-extrabold tracking-tight">{property.monthly_price > 0 ? formatPrice(property.monthly_price) : 'Nous consulter'}</span>{property.monthly_price > 0 && <span className="text-xs font-normal text-ink-700">/ {isStudio ? 'mois' : 'semaine'}</span>}</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-700">{isMonthly ? 'Loyer hors charges' : property.property_type === 'mobile_home' ? 'Location' : isVilla ? 'Juillet – août' : 'Hors saison'}</p>
+            <p className="mt-1 flex flex-wrap items-baseline gap-x-1.5 text-ink-950"><span className="text-2xl font-extrabold tracking-tight">{property.monthly_price > 0 ? formatPrice(property.monthly_price) : 'Nous consulter'}</span>{property.monthly_price > 0 && <span className="text-xs font-normal text-ink-700">/ {isMonthly ? 'mois' : 'semaine'}</span>}</p>
           </div>
           <span aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink-950 text-white transition-colors group-hover:bg-brick-500"><ArrowUpRight className="h-5 w-5" /></span>
         </div>

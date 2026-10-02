@@ -14,7 +14,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label, FieldError } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
-import { ReservationPaymentNotice } from '@/components/forms/reservation-payment-notice';
 
 const STEPS = ['Vos coordonnées', 'Votre projet de location', 'Récapitulatif', 'Paiement'] as const;
 
@@ -92,9 +91,6 @@ export function ReservationForm({
       </div>
 
       <form onSubmit={(event) => event.preventDefault()}>
-        <div className="mb-6">
-          <ReservationPaymentNotice />
-        </div>
         <AnimatePresence mode="wait">
           {step === 0 && (
             <motion.div

@@ -1,5 +1,4 @@
 import { PaymentStep } from '@/components/forms/payment-step';
-import { ReservationPaymentNotice } from '@/components/forms/reservation-payment-notice';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { CheckCircle2, Home } from 'lucide-react';
@@ -51,9 +50,6 @@ export default async function ReservationConfirmationPage({
           <Row label="Statut" value={RESERVATION_STATUS_LABELS[reservation.status] ?? reservation.status} />
         </div>
 
-        <div className="mt-6 text-left">
-          <ReservationPaymentNotice />
-        </div>
         <PaymentStep reference={reservation.reference} />
 
         <div className="mt-8 flex flex-col gap-2.5 sm:flex-row">

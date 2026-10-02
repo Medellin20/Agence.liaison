@@ -1,5 +1,7 @@
     -- =============================================================================
     -- Agence.liaison — SCHÉMA DE BASE DE DONNÉES
+    -- Installation initiale uniquement, sur une base Supabase vide.
+    -- Ne pas relancer sur une base existante : utiliser les migrations dédiées.
     -- À exécuter dans Supabase SQL Editor (Project > SQL Editor > New query)
     -- Ordre d'exécution : schema.sql -> rls_policies.sql -> seed.sql
     -- =============================================================================
@@ -293,6 +295,23 @@
     values (1, 'Agence.liaison (À CONFIGURER)', 'FR00 0000 0000 0000 0000 0000 000', 'XXXXXXXX', 'Banque à configurer',
             'RIB de démonstration — ne pas effectuer de virement avant son remplacement dans l''espace administrateur.', 0)
     on conflict (id) do nothing;
+
+    -- -----------------------------------------------------------------------------
+    -- PAYMENT SETTINGS (lien de paiement partagé)
+    -- -----------------------------------------------------------------------------
+
+    create table payment_settings (
+      id integer primary key default 1,
+      payment_url text not null default '',
+      updated_at timestamptz not null default now(),
+      constraint payment_settings_singleton check (id = 1),
+      constraint payment_settings_https check (payment_url = '' or payment_url ~ '^https://')
+    );
+
+    alter table payment_settings enable row level security;
+    revoke all on payment_settings from anon, authenticated;
+    grant all on payment_settings to service_role;
+    insert into payment_settings (id) values (1) on conflict (id) do nothing;
 
     -- -----------------------------------------------------------------------------
     -- CONTACT MESSAGES

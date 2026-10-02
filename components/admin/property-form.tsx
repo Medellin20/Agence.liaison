@@ -28,7 +28,6 @@ const BOOLEAN_FIELDS: { key: keyof PropertyInput; label: string }[] = [
   { key: 'hasParking', label: 'Parking' },
   { key: 'hasGarage', label: 'Garage' },
   { key: 'hasGarden', label: 'Jardin' },
-  { key: 'isFurnished', label: 'Meublé' },
 ];
 
 function propertyToFormValues(property: Property, amenityIds: string[], amenities: Amenity[]): PropertyInput {
@@ -141,6 +140,11 @@ export function PropertyForm({
   });
 
   const propertyType = watch('propertyType');
+  const availableTypeOptions = React.useMemo(() => {
+    if (mode !== 'edit' || !property || PROPERTY_TYPES.some(type => type.value === property.property_type)) return PROPERTY_TYPES;
+    const existingType = ALL_PROPERTY_TYPES.find(type => type.value === property.property_type);
+    return existingType ? [...PROPERTY_TYPES, existingType] : PROPERTY_TYPES;
+  }, [mode, property]);
   const isVilla = propertyType === 'villa';
   const isStudio = propertyType === 'furnished_studio';
   const isApartment = ['apartment_t2', 'apartment_t3', 'furnished_studio'].includes(propertyType);
@@ -302,7 +306,7 @@ export function PropertyForm({
           <div>
             <Label htmlFor="propertyType">Catégorie</Label>
             <Select id="propertyType" {...register('propertyType')}>
-              {(mode === 'create' ? PROPERTY_TYPES : ALL_PROPERTY_TYPES).map((t) => (
+              {availableTypeOptions.map((t) => (
                 <option key={t.value} value={t.value}>
                   {t.label}
                 </option>
@@ -419,7 +423,7 @@ export function PropertyForm({
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-3 min-[380px]:grid-cols-2 sm:grid-cols-3">
-          {BOOLEAN_FIELDS.filter(field => !isStudio || field.key !== 'isFurnished').map((field) => (
+          {BOOLEAN_FIELDS.map((field) => (
             <label key={field.key} className="flex min-h-11 cursor-pointer items-center gap-2.5 text-sm text-ink-700">
               <Checkbox {...register(field.key as any)} />
               {field.label}
@@ -440,15 +444,6 @@ export function PropertyForm({
               </>}
             </Select>
             <FieldError message={errors.contractType?.message} />
-          </div>
-          <div>
-            <Label htmlFor="interiorType">Intérieur</Label>
-            <Select id="interiorType" {...register('interiorType')}>
-              <option value="Meublé">Meublé</option>
-              {!isStudio && <><option value="Non meublé">Non meublé</option>
-              <option value="Semi-meublé">Semi-meublé</option></>}
-            </Select>
-            <FieldError message={errors.interiorType?.message} />
           </div>
           <div>
             <Label htmlFor="maintenanceCondition">État d’entretien</Label>

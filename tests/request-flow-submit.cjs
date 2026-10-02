@@ -37,7 +37,6 @@ function harness(file, exportName) {
     '@/components/ui/button': { Button: component },
     '@/lib/utils/constants': { TIME_SLOTS: [] },
     '@/lib/utils/cn': { cn: () => '' },
-    '@/components/forms/reservation-payment-notice': { ReservationPaymentNotice: component },
   };
   const context = { exports: {}, require: name => {
     assert.ok(name in imports, `Unexpected import: ${name}`);

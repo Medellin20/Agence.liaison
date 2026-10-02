@@ -74,6 +74,12 @@ Pour recevoir les alertes Gmail lors d'une demande de visite ou d'une réservati
 
 ### 3. Créer la base de données
 
+Cette étape s'applique uniquement à un projet Supabase neuf avec une base vide.
+Ne relancez pas `schema.sql` sur une base existante : il recrée les types et tables
+et échouera avec une erreur du type `type "property_status" already exists`.
+Pour une base existante, exécutez uniquement les migrations qu'elle n'a pas encore
+reçues.
+
 Dans le **SQL Editor** de votre projet Supabase, exécutez dans l'ordre :
 
 1. `supabase/schema.sql` — tables, enums, triggers, buckets Storage
@@ -155,7 +161,7 @@ supabase/               Scripts SQL (schema, RLS, seed)
 
 ### Côté public
 
-- **Catalogue** filtré par ville, prix, chambres, type, ameublement — tri + pagination — filtres conservés dans l'URL
+- **Catalogue** filtré par ville, prix, chambres et type — tri + pagination — filtres conservés dans l'URL
 - **Moteur de recherche** intégré dans le hero de la page d'accueil
 - **Fiche logement** avec galerie plein écran, équipements, carte OpenStreetMap, logements similaires, données structurées JSON-LD
 - **Demande de visite** multi-étapes (date → coordonnées → paiement Stripe Checkout ou confirmation)
@@ -291,7 +297,7 @@ Projet propriétaire — Real Estate NL. Tous droits réservés.
 
 ### Lien de paiement des visites et réservations
 
-Appliquer `supabase/migrations/20260916_payment_settings.sql` dans Supabase, puis saisir le lien HTTPS dans **Admin → Paramètres → Paiement**. Le lien est commun aux deux parcours et peut être modifié ou retiré à tout moment. Les pages de confirmation lisent la configuration à chaque requête et affichent la quatrième et dernière étape après l’enregistrement de la demande. Sans lien configuré, elles invitent le client à contacter l’équipe. Les captures de paiement sont envoyées par e-mail à `contacts@agncliaison.com`, avec la référence du dossier ; le paiement n’est pas automatiquement marqué comme confirmé.
+Pour une base existante, appliquer `supabase/migrations/20260916_payment_settings.sql` dans Supabase. Une installation neuve via `supabase/schema.sql` crée aussi cette configuration. Saisir ensuite le lien HTTPS dans **Admin → Paramètres → Paiement**. Le lien est commun aux deux parcours et peut être modifié ou retiré à tout moment. Les pages de confirmation lisent la configuration à chaque requête et affichent la quatrième et dernière étape après l’enregistrement de la demande. Sans lien configuré, elles invitent le client à contacter l’équipe. Les captures de paiement sont envoyées par e-mail à `contacts@agncliaison.com`, avec la référence du dossier ; le paiement n’est pas automatiquement marqué comme confirmé.
 
 
 ### Appartements meublés et mobil-homes

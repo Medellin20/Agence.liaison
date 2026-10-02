@@ -23,6 +23,21 @@ test('Accept HTTPS payment URLs and removing the link; reject unsafe URLs', () =
     assert.equal(schemas.paymentSettingsSchema.safeParse({ paymentUrl: value }).success, false);
   }
 });
+test('The fresh-install schema creates the protected payment settings singleton', () => {
+  const schema = fs.readFileSync('supabase/schema.sql', 'utf8');
+  assert.match(schema, /Installation initiale uniquement, sur une base Supabase vide/);
+  assert.match(schema, /create table payment_settings\s*\([\s\S]*?constraint payment_settings_singleton check \(id = 1\)/);
+  assert.match(schema, /constraint payment_settings_https check \(payment_url = '' or payment_url ~ '\^https:\/\/'\)/);
+  assert.match(schema, /alter table payment_settings enable row level security/);
+  assert.match(schema, /revoke all on payment_settings from anon, authenticated/);
+  assert.match(schema, /grant all on payment_settings to service_role/);
+  assert.match(schema, /insert into payment_settings \(id\) values \(1\) on conflict \(id\) do nothing/);
+});
+test('The existing-database payment migration does not recreate application enums', () => {
+  const migration = fs.readFileSync('supabase/migrations/20260916_payment_settings.sql', 'utf8');
+  assert.doesNotMatch(migration, /create type|property_status/);
+  assert.match(migration, /create table if not exists public\.payment_settings/);
+});
 function setup({ authenticated = true, error = null, url = 'https://example.com/pay' } = {}) {
   const writes = [], paths = [];
   let clients = 0;

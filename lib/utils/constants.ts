@@ -20,13 +20,17 @@ export const PROPERTY_TYPES = [
   { value: 'apartment_t2', label: 'Appartement T2' },
   { value: 'apartment_t3', label: 'Appartement T3' },
   { value: 'house', label: 'Maison' },
+] as const;
+
+export const LEGACY_PROPERTY_TYPES = [
   { value: 'chalet', label: 'Chalet' },
   { value: 'villa', label: 'Villa' },
   { value: 'furnished_studio', label: 'Appartement meublé' },
   { value: 'mobile_home', label: 'Mobil-home' },
 ] as const;
 
-export const NEW_PROPERTY_TYPES = PROPERTY_TYPES.slice(0, 3);
+export const PUBLIC_PROPERTY_TYPE_VALUES = PROPERTY_TYPES.map((type) => type.value);
+export const ALL_PROPERTY_TYPES = [...PROPERTY_TYPES, ...LEGACY_PROPERTY_TYPES];
 
 export function isMonthlyRentalProperty(type: string) {
   return ['apartment_t2', 'apartment_t3', 'house', 'furnished_studio'].includes(type);

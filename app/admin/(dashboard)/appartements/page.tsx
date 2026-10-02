@@ -10,7 +10,7 @@ import { Select } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Badge, StatusDot } from '@/components/ui/badge';
 import { EmptyState } from '@/components/ui/empty-state';
-import { DESTINATION_CITIES, isMonthlyRentalProperty, PROPERTY_STATUS_LABELS, PROPERTY_TYPES } from '@/lib/utils/constants';
+import { ALL_PROPERTY_TYPES, DESTINATION_CITIES, isMonthlyRentalProperty, PROPERTY_STATUS_LABELS } from '@/lib/utils/constants';
 import { formatPrice } from '@/lib/utils/format';
 
 export const metadata: Metadata = { title: 'Tous les biens' };
@@ -52,7 +52,7 @@ export default async function AdminPropertiesPage({
         </div>
         <Select name="type" defaultValue={searchParams.type}>
           <option value="">Tous les biens</option>
-          {PROPERTY_TYPES.map((type) => <option key={type.value} value={type.value}>{type.label}</option>)}
+          {ALL_PROPERTY_TYPES.map((type) => <option key={type.value} value={type.value}>{type.label}</option>)}
         </Select>
         <Select name="status" defaultValue={searchParams.status}>
           <option value="">Tous les statuts</option>

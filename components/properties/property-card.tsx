@@ -4,14 +4,13 @@ import { ArrowUpRight, BedDouble, Bath, MapPin, Mountain, Sun, Camera, Building2
 import type { PropertyWithRelations } from '@/types/database';
 import { StatusDot } from '@/components/ui/badge';
 import { FavoriteButton } from '@/components/properties/favorite-button';
-import { isMonthlyRentalProperty, PROPERTY_STATUS_LABELS, PROPERTY_TYPES } from '@/lib/utils/constants';
+import { ALL_PROPERTY_TYPES, isMonthlyRentalProperty, PROPERTY_STATUS_LABELS } from '@/lib/utils/constants';
 import { formatPrice } from '@/lib/utils/format';
 
 export function PropertyCard({ property }: { property: PropertyWithRelations }) {
   const primaryImage = property.property_images.find(img => img.is_primary) ?? property.property_images[0];
   const statusMeta = PROPERTY_STATUS_LABELS[property.status];
   const isVilla = property.property_type === 'villa';
-  const isStudio = property.property_type === 'furnished_studio';
   const isApartment = ['apartment_t2', 'apartment_t3', 'furnished_studio'].includes(property.property_type);
   const isMonthly = isMonthlyRentalProperty(property.property_type);
   const TypeIcon = isApartment ? Building2 : property.property_type === 'house' ? House : property.property_type === 'mobile_home' ? Caravan : isVilla ? Sun : Mountain;
@@ -37,7 +36,7 @@ export function PropertyCard({ property }: { property: PropertyWithRelations }) 
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/65 via-transparent to-ink-950/10" />
         <span className="absolute left-3 top-3 inline-flex max-w-[calc(100%-5rem)] items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-ink-900">
           <TypeIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          {PROPERTY_TYPES.find(type => type.value === property.property_type)?.label ?? 'Logement'}
+          {ALL_PROPERTY_TYPES.find(type => type.value === property.property_type)?.label ?? 'Logement'}
         </span>
         <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3 text-white">
           <span className="flex min-w-0 items-center gap-1.5 text-sm font-semibold">

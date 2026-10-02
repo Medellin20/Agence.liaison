@@ -16,7 +16,7 @@ import { Select } from '@/components/ui/select';
 import { Label, FieldError } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { NEW_PROPERTY_TYPES, PROPERTY_TYPES } from '@/lib/utils/constants';
+import { ALL_PROPERTY_TYPES, PROPERTY_TYPES } from '@/lib/utils/constants';
 import { slugify } from '@/lib/utils/format';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import type { Amenity, Property, PropertyType } from '@/types/database';
@@ -302,7 +302,7 @@ export function PropertyForm({
           <div>
             <Label htmlFor="propertyType">Catégorie</Label>
             <Select id="propertyType" {...register('propertyType')}>
-              {(mode === 'create' ? NEW_PROPERTY_TYPES : PROPERTY_TYPES).map((t) => (
+              {(mode === 'create' ? PROPERTY_TYPES : ALL_PROPERTY_TYPES).map((t) => (
                 <option key={t.value} value={t.value}>
                   {t.label}
                 </option>

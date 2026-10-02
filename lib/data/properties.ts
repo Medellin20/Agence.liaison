@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import type { Amenity, Property, PropertyImage, PropertyWithRelations } from '@/types/database';
 import type { PropertyFilters } from '@/types';
+import { PUBLIC_PROPERTY_TYPE_VALUES } from '@/lib/utils/constants';
 
 import { getPropertyAmenities } from '@/lib/utils/property-amenities';
 
@@ -31,7 +32,8 @@ export async function getPublishedProperties(filters: PropertyFilters = {}) {
       { count: 'exact' }
     )
     .eq('is_published', true)
-    .neq('status', 'draft');
+    .neq('status', 'draft')
+    .in('property_type', PUBLIC_PROPERTY_TYPE_VALUES);
 
   // La ville reste le premier critère de classement, y compris entre deux pages.
   query = query.order('city', { ascending: true });
@@ -85,6 +87,7 @@ export async function getPropertyBySlug(slug: string): Promise<PropertyWithRelat
     .eq('slug', slug)
     .eq('is_published', true)
     .neq('status', 'draft')
+    .in('property_type', PUBLIC_PROPERTY_TYPE_VALUES)
     .maybeSingle();
 
   if (error || !data) return null;
@@ -102,6 +105,7 @@ export async function getSimilarProperties(property: Property, limit = 3) {
     .eq('city', property.city)
     .neq('id', property.id)
     .neq('status', 'draft')
+    .in('property_type', PUBLIC_PROPERTY_TYPE_VALUES)
     .limit(limit);
 
   if (error) return [];
@@ -115,7 +119,8 @@ export async function getAvailableCities(): Promise<string[]> {
     .from('properties')
     .select('city')
     .eq('is_published', true)
-    .neq('status', 'draft');
+    .neq('status', 'draft')
+    .in('property_type', PUBLIC_PROPERTY_TYPE_VALUES);
 
   const { data, error } = await query;
 
@@ -130,7 +135,8 @@ export async function getAvailableCityCounts(): Promise<{ city: string; count: n
     .from('properties')
     .select('city')
     .eq('is_published', true)
-    .neq('status', 'draft');
+    .neq('status', 'draft')
+    .in('property_type', PUBLIC_PROPERTY_TYPE_VALUES);
 
   if (error || !data) return [];
   const counts = new Map<string, number>();
@@ -154,6 +160,7 @@ export async function getCityPropertySummaries(): Promise<CityPropertySummary[]>
     .select('city, monthly_price, property_images(url, is_primary, sort_order)')
     .eq('is_published', true)
     .neq('status', 'draft')
+    .in('property_type', PUBLIC_PROPERTY_TYPE_VALUES)
     .order('city', { ascending: true });
 
   if (error || !data) return [];
@@ -187,6 +194,7 @@ export async function getFeaturedProperties(limit = 6) {
     .select(`*, property_images(*), property_amenities(amenities(*))`)
     .eq('is_published', true)
     .neq('status', 'draft')
+    .in('property_type', PUBLIC_PROPERTY_TYPE_VALUES)
     .order('is_featured', { ascending: false })
     .order('created_at', { ascending: false })
     .limit(limit);
@@ -202,7 +210,8 @@ export async function getAllPublishedSlugs(): Promise<{ slug: string; updated_at
     .from('properties')
     .select('slug, updated_at')
     .eq('is_published', true)
-    .neq('status', 'draft');
+    .neq('status', 'draft')
+    .in('property_type', PUBLIC_PROPERTY_TYPE_VALUES);
 
   if (error || !data) return [];
   return data;

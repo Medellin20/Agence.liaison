@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, ArrowRight, Mountain, Sun, Compass, Building2, Caravan, House } from 'lucide-react';
+import { MapPin, ArrowRight, Compass, Building2, House, Mountain } from 'lucide-react';
 import { PropertyGrid } from '@/components/properties/property-grid';
 import { PropertyFilters } from '@/components/properties/property-filters';
 import { Pagination } from '@/components/properties/pagination';
@@ -13,7 +13,7 @@ export const revalidate = 30;
 export const metadata: Metadata = {
   title: 'Biens à louer en France',
   description:
-    'Découvrez nos chalets, villas, appartements meublés et mobil-homes à louer en France. Filtrez par destination, budget, capacité et type de bien.',
+    'Découvrez nos appartements T2, appartements T3 et maisons à louer en France. Filtrez par destination, budget, capacité et type de bien.',
 };
 
 interface PageProps {
@@ -98,19 +98,15 @@ function CatalogueHeader({ city, propertyType }: { city?: string; propertyType?:
     { label: 'Appartements T2', type: 'apartment_t2', icon: Building2 },
     { label: 'Appartements T3', type: 'apartment_t3', icon: Building2 },
     { label: 'Maisons', type: 'house', icon: House },
-    { label: 'Nos chalets', type: 'chalet', icon: Mountain },
-    { label: 'Nos villas', type: 'villa', icon: Sun },
-    { label: 'Appartements meublés', type: 'furnished_studio', icon: Building2 },
-    { label: 'Mobil-homes', type: 'mobile_home', icon: Caravan },
   ];
   return (
     <header className="relative overflow-hidden rounded-3xl bg-ink-950 px-6 py-10 text-white sm:px-10 sm:py-12">
       <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-32 h-96 w-96 rounded-full border-[60px] border-white/[0.04]" />
       <p className="relative text-xs font-semibold uppercase tracking-[0.24em] text-canal-200">La collection Agence.liaison</p>
       <h1 className="relative mt-5 max-w-3xl text-3xl font-bold leading-tight tracking-tight sm:text-5xl">
-        {city ? <>Une parenthèse à <span className="font-serif font-normal italic text-canal-200">{city}.</span></> : propertyType === 'apartment_t2' ? <>Appartements T2.<br /><span className="font-serif font-normal italic text-canal-200">Une chambre, un nouveau départ.</span></> : propertyType === 'apartment_t3' ? <>Appartements T3.<br /><span className="font-serif font-normal italic text-canal-200">De l’espace pour votre projet.</span></> : propertyType === 'house' ? <>Maisons en France.<br /><span className="font-serif font-normal italic text-canal-200">Deux à trois chambres.</span></> : propertyType === 'chalet' ? <>L’esprit chalet.<br /><span className="font-serif font-normal italic text-canal-200">La montagne pour horizon.</span></> : propertyType === 'villa' ? <>L’art de la villa.<br /><span className="font-serif font-normal italic text-canal-200">Du soleil, de l’espace.</span></> : propertyType === 'furnished_studio' ? <>Un appartement prêt à vivre.<br /><span className="font-serif font-normal italic text-canal-200">Meublé pour votre confort.</span></> : propertyType === 'mobile_home' ? <>L’esprit plein air.<br /><span className="font-serif font-normal italic text-canal-200">Découvrez nos mobil-homes.</span></> : <>Des lieux à découvrir.<br /><span className="font-serif font-normal italic text-canal-200">Des séjours à imaginer.</span></>}
+        {city ? <>Une parenthèse à <span className="font-serif font-normal italic text-canal-200">{city}.</span></> : propertyType === 'apartment_t2' ? <>Appartements T2.<br /><span className="font-serif font-normal italic text-canal-200">Une chambre, un nouveau départ.</span></> : propertyType === 'apartment_t3' ? <>Appartements T3.<br /><span className="font-serif font-normal italic text-canal-200">De l’espace pour votre projet.</span></> : propertyType === 'house' ? <>Maisons en France.<br /><span className="font-serif font-normal italic text-canal-200">Deux à trois chambres.</span></> : <>Des logements à découvrir.<br /><span className="font-serif font-normal italic text-canal-200">Des projets à imaginer.</span></>}
       </h1>
-      <p className="relative mt-5 max-w-xl text-sm leading-7 text-white/75 sm:text-base">{city ? 'Trouvez le logement qui vous ressemble dans cette destination.' : 'Chalets, villas, appartements meublés et mobil-homes : trouvez votre prochaine adresse en France.'}</p>
+      <p className="relative mt-5 max-w-xl text-sm leading-7 text-white/75 sm:text-base">{city ? 'Trouvez le logement qui vous ressemble dans cette destination.' : 'Appartements T2, appartements T3 et maisons : trouvez votre prochaine adresse en France.'}</p>
       <nav aria-label="Collections de logements" className="relative mt-8 flex flex-wrap gap-2">
         {categories.map(({ label, type, icon: Icon }) => {
           const active = !city && (propertyType ?? '') === type;

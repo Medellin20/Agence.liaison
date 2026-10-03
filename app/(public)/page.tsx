@@ -54,7 +54,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="container-app py-20 sm:py-28">
+      <section className="container-app py-12 sm:pb-10 sm:pt-20">
         <div className="mb-10 grid gap-5 md:grid-cols-[1fr_auto] md:items-end">
           <div><p className="text-eyebrow uppercase text-ink-500">Location & achat</p><h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">Le bien qui correspond à votre vie en France.</h2></div>
           <p className="max-w-md text-sm leading-7 text-ink-600">Chaque recherche est différente. Nous partons de vos envies pour vous orienter vers le type de logement qui vous convient.</p>
@@ -69,8 +69,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="biens" className="container-app scroll-mt-24 py-20 sm:py-28">
-        <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+      <section id="biens" className="container-app scroll-mt-24 pb-16 pt-10 sm:pb-20 sm:pt-12">
+        <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div><p className="text-eyebrow uppercase text-ink-500">À découvrir</p><h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">Nos biens disponibles en France.</h2><p className="mt-4 max-w-xl text-sm leading-7 text-ink-600">Découvrez une sélection de logements publiés et prêts à accueillir votre projet.</p></div>
           <Link href="/appartements" className="inline-flex min-h-11 shrink-0 items-center gap-2 text-sm font-semibold text-ink-800 transition-colors hover:text-canal-700">Voir tous les biens <ArrowRight className="h-4 w-4" /></Link>
         </div>

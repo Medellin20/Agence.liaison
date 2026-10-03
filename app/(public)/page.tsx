@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { ArrowRight, ArrowUpRight, Check, Home, KeyRound, MapPin, MessagesSquare } from 'lucide-react';
+import { PropertyGrid } from '@/components/properties/property-grid';
+import { getFeaturedProperties } from '@/lib/data/properties';
 
 export const revalidate = 60;
 export const metadata: Metadata = {
@@ -32,7 +34,9 @@ const steps = [
   { icon: KeyRound, title: 'Avançons à vos côtés', text: 'De la première sélection aux prochaines étapes, vous avez un interlocuteur pour vous guider.' },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const properties = await getFeaturedProperties(6);
+
   return (
     <>
       <section className="relative isolate min-h-[560px] bg-ink-950 text-white sm:min-h-[640px]">
@@ -44,13 +48,25 @@ export default function HomePage() {
           <p className="mt-7 max-w-2xl text-base leading-7 text-white/90 sm:text-lg">Vous êtes néerlandais et cherchez à louer ou acheter un bien en France ? Je vous accompagne dans votre recherche, partout dans le pays.</p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Link href="/contact" className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg bg-sand-200 px-6 py-3 text-sm font-semibold text-ink-950 transition-colors hover:bg-white">Parlons de votre projet <ArrowUpRight className="h-5 w-5" /></Link>
-            <a href="#biens" className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-white/50 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10">Découvrir les biens recherchés <ArrowRight className="h-4 w-4" /></a>
+            <a href="#biens" className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-white/50 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10">Découvrir les biens disponibles <ArrowRight className="h-4 w-4" /></a>
           </div>
           <div className="mt-10 flex items-center gap-2 text-xs text-white/80"><MapPin className="h-4 w-4" /> Un accompagnement partout en France</div>
         </div>
       </section>
 
       <section id="biens" className="container-app scroll-mt-24 py-20 sm:py-28">
+        <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div><p className="text-eyebrow uppercase text-ink-500">À découvrir</p><h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">Nos biens disponibles en France.</h2><p className="mt-4 max-w-xl text-sm leading-7 text-ink-600">Découvrez une sélection de logements publiés et prêts à accueillir votre projet.</p></div>
+          <Link href="/appartements" className="inline-flex min-h-11 shrink-0 items-center gap-2 text-sm font-semibold text-ink-800 transition-colors hover:text-canal-700">Voir tous les biens <ArrowRight className="h-4 w-4" /></Link>
+        </div>
+        {properties.length > 0 ? (
+          <PropertyGrid properties={properties} />
+        ) : (
+          <p className="rounded-2xl border border-ink-100 bg-white p-8 text-sm leading-7 text-ink-700">Les biens disponibles apparaîtront ici dès leur publication. Consultez le catalogue pour découvrir les destinations proposées.</p>
+        )}
+      </section>
+
+      <section className="container-app py-20 sm:py-28">
         <div className="mb-10 grid gap-5 md:grid-cols-[1fr_auto] md:items-end">
           <div><p className="text-eyebrow uppercase text-ink-500">Location & achat</p><h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">Le bien qui correspond à votre vie en France.</h2></div>
           <p className="max-w-md text-sm leading-7 text-ink-600">Chaque recherche est différente. Nous partons de vos envies pour vous orienter vers le type de logement qui vous convient.</p>

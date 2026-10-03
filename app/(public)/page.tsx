@@ -54,18 +54,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="biens" className="container-app scroll-mt-24 py-20 sm:py-28">
-        <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div><p className="text-eyebrow uppercase text-ink-500">À découvrir</p><h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">Nos biens disponibles en France.</h2><p className="mt-4 max-w-xl text-sm leading-7 text-ink-600">Découvrez une sélection de logements publiés et prêts à accueillir votre projet.</p></div>
-          <Link href="/appartements" className="inline-flex min-h-11 shrink-0 items-center gap-2 text-sm font-semibold text-ink-800 transition-colors hover:text-canal-700">Voir tous les biens <ArrowRight className="h-4 w-4" /></Link>
-        </div>
-        {properties.length > 0 ? (
-          <PropertyGrid properties={properties} />
-        ) : (
-          <p className="rounded-2xl border border-ink-100 bg-white p-8 text-sm leading-7 text-ink-700">Les biens disponibles apparaîtront ici dès leur publication. Consultez le catalogue pour découvrir les destinations proposées.</p>
-        )}
-      </section>
-
       <section className="container-app py-20 sm:py-28">
         <div className="mb-10 grid gap-5 md:grid-cols-[1fr_auto] md:items-end">
           <div><p className="text-eyebrow uppercase text-ink-500">Location & achat</p><h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">Le bien qui correspond à votre vie en France.</h2></div>
@@ -79,6 +67,18 @@ export default async function HomePage() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section id="biens" className="container-app scroll-mt-24 py-20 sm:py-28">
+        <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div><p className="text-eyebrow uppercase text-ink-500">À découvrir</p><h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">Nos biens disponibles en France.</h2><p className="mt-4 max-w-xl text-sm leading-7 text-ink-600">Découvrez une sélection de logements publiés et prêts à accueillir votre projet.</p></div>
+          <Link href="/appartements" className="inline-flex min-h-11 shrink-0 items-center gap-2 text-sm font-semibold text-ink-800 transition-colors hover:text-canal-700">Voir tous les biens <ArrowRight className="h-4 w-4" /></Link>
+        </div>
+        {properties.length > 0 ? (
+          <PropertyGrid properties={properties} />
+        ) : (
+          <p className="rounded-2xl border border-ink-100 bg-white p-8 text-sm leading-7 text-ink-700">Les biens disponibles apparaîtront ici dès leur publication. Consultez le catalogue pour découvrir les destinations proposées.</p>
+        )}
       </section>
 
       <section className="bg-[#eaeedf] py-20 sm:py-24">

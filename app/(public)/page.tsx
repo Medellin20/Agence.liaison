@@ -55,10 +55,10 @@ export default function HomePage() {
           <div><p className="text-eyebrow uppercase text-ink-500">Location & achat</p><h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">Le bien qui correspond à votre vie en France.</h2></div>
           <p className="max-w-md text-sm leading-7 text-ink-600">Chaque recherche est différente. Nous partons de vos envies pour vous orienter vers le type de logement qui vous convient.</p>
         </div>
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 xl:grid-cols-2">
           {propertyOptions.map((item) => (
-            <article key={item.number} className="group grid overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-card sm:grid-cols-[0.9fr_1.1fr]">
-              <div className="relative min-h-64 overflow-hidden bg-sand-200 sm:min-h-[340px]"><Image src={item.image} alt={item.alt} fill sizes="(max-width: 640px) 100vw, 50vw" className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-105" /></div>
+            <article key={item.number} className="group grid min-w-0 overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-card sm:grid-cols-[0.9fr_1.1fr]">
+              <div className="relative min-h-64 overflow-hidden bg-sand-200 sm:min-h-[300px]"><Image src={item.image} alt={item.alt} fill sizes="(max-width: 640px) 100vw, (max-width: 1279px) 100vw, 50vw" className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-105" /></div>
               <div className="flex flex-col justify-center p-6 sm:p-8"><p className="text-xs font-semibold tracking-[0.18em] text-ink-500">{item.number} / VOTRE RECHERCHE</p><h3 className="editorial-title mt-5 text-2xl sm:text-3xl">{item.title}</h3><p className="mt-4 text-sm leading-7 text-ink-600">{item.text}</p><p className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-ink-700"><Check className="h-4 w-4 text-canal-600" /> Location ou achat</p></div>
             </article>
           ))}

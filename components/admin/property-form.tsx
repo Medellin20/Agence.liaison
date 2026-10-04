@@ -266,10 +266,52 @@ export function PropertyForm({
             <Textarea
               id="description"
               rows={10}
-              placeholder={'Indiquez la capacité maximale, les couchages, les salles de bain, les équipements, les distances, les tarifs saisonniers et les services inclus.'}
+              placeholder={`# Appartement lumineux à Annecy
+
+Situé au cœur de la ville, cet appartement ...
+
+## Caractéristiques
+- 2 chambres confortables
+- 1 salle de bain
+- Cuisine équipée
+- Terrasse orientée sud
+
+## À proximité
+- Centre-ville à 5 minutes à pied
+- Lac à 10 minutes en voiture
+- Station de ski à 20 minutes
+
+## Services inclus
+- Wi‑Fi
+- Linge de maison
+- Parking sécurisé`}
               {...register('description')}
             />
-            <p className="mt-1.5 text-xs text-ink-400">
+            <div className="mt-2 rounded-xl border border-ink-100 bg-sand-50 p-3">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">Exemple de format recommandé</p>
+              <pre className="mt-2 whitespace-pre-wrap text-xs leading-6 text-ink-600">
+{`# Titre principal
+
+Description générale du bien, de son emplacement et de son ambiance.
+
+## Caractéristiques
+- 3 chambres
+- 2 salles de bain
+- 120 m²
+- Terrasse et jardin
+
+## À proximité
+- Centre-ville à 5 minutes
+- Station de ski à 15 minutes
+- Lac à 10 minutes
+
+## Services inclus
+- Wi‑Fi
+- Linge de maison
+- Parking`}
+              </pre>
+            </div>
+            <p className="mt-2 text-xs text-ink-400">
               La présentation accepte le gras, l’italique, le souligné, le texte barré, les titres et les listes. Les marqueurs de mise en forme ne sont pas affichés sur la page publique.
             </p>
             <FieldError message={errors.description?.message} />

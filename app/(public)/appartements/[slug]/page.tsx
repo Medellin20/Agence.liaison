@@ -252,17 +252,15 @@ export default async function PropertyDetailPage({ params }: PageProps) {
 }
 
 function PropertyPresentation({ description }: { description: string }) {
-  const blocks = description.trim().split(/\n\s*\n/);
+  const blocks = normalizeDescriptionBlocks(description);
 
   return (
-    <div className="mt-4 space-y-5 leading-relaxed text-ink-600">
+    <div className="mt-4 space-y-5 rounded-2xl border border-ink-100 bg-white p-4 leading-relaxed text-ink-600 sm:p-5">
       {blocks.map((block, blockIndex) => {
         const lines = block.split('\n').map((line) => line.trim()).filter(Boolean);
         const markdownHeading = lines.length === 1 ? lines[0].match(/^(#{1,3})\s+(.+)$/) : null;
-        const isList = lines.length > 0 && lines.every((line) => /^[•*-]\s+/.test(line));
-        const isHeading = lines.length === 1
-          && lines[0] === lines[0].toLocaleUpperCase('fr-FR')
-          && /[A-ZÀ-ÖØ-Þ]/.test(lines[0]);
+        const isList = lines.length > 0 && lines.every((line) => looksLikeListItem(line));
+        const isHeading = lines.length === 1 && looksLikeSectionHeading(lines[0]);
 
         if (markdownHeading) {
           const isMainHeading = markdownHeading[1].length === 1;
@@ -292,7 +290,7 @@ function PropertyPresentation({ description }: { description: string }) {
               {lines.map((line, lineIndex) => (
                 <li key={lineIndex} className="flex gap-3">
                   <span aria-hidden="true" className="font-bold text-canal-600">•</span>
-                  <span>{formatInlineText(line.replace(/^[•*-]\s+/, ''))}</span>
+                  <span>{formatInlineText(stripListMarker(line))}</span>
                 </li>
               ))}
             </ul>
@@ -312,6 +310,78 @@ function PropertyPresentation({ description }: { description: string }) {
       })}
     </div>
   );
+}
+
+function normalizeDescriptionBlocks(description: string) {
+  const cleaned = description.replace(/\r/g, '').trim();
+  if (!cleaned) return [''];
+
+  const blocks = cleaned.split(/\n\s*\n+/).filter(Boolean);
+
+  return blocks.flatMap((block) => {
+    const lines = block.split('\n').map((line) => line.trim()).filter(Boolean);
+    if (lines.length === 0) return [];
+
+    const normalizedGroups: string[][] = [];
+    let currentGroup: string[] = [];
+
+    for (const line of lines) {
+      if (looksLikeListItem(line)) {
+        if (currentGroup.length > 0) {
+          normalizedGroups.push(currentGroup);
+          currentGroup = [];
+        }
+        normalizedGroups.push([line]);
+        continue;
+      }
+
+      if (looksLikeSectionHeading(line) || line.endsWith(':')) {
+        if (currentGroup.length > 0) {
+          normalizedGroups.push(currentGroup);
+        }
+        currentGroup = [line];
+        continue;
+      }
+
+      if (currentGroup.length > 0 && (currentGroup[currentGroup.length - 1].endsWith(':') || looksLikeSectionHeading(currentGroup[currentGroup.length - 1]))) {
+        currentGroup.push(line);
+        continue;
+      }
+
+      if (currentGroup.length > 0 && currentGroup.join(' ').length < 260) {
+        currentGroup.push(line);
+        continue;
+      }
+
+      if (currentGroup.length > 0) {
+        normalizedGroups.push(currentGroup);
+      }
+      currentGroup = [line];
+    }
+
+    if (currentGroup.length > 0) {
+      normalizedGroups.push(currentGroup);
+    }
+
+    return normalizedGroups.map((group) => group.join('\n'));
+  });
+}
+
+function looksLikeListItem(line: string) {
+  return /^([•*\-–—]|\d+[.)])\s+/.test(line) || /^[-–—]\s+/.test(line);
+}
+
+function stripListMarker(line: string) {
+  return line.replace(/^([•*\-–—]|\d+[.)])\s+/, '').trim();
+}
+
+function looksLikeSectionHeading(line: string) {
+  if (!line || line.length > 80) return false;
+
+  const hasUppercase = /[A-ZÀ-ÖØ-Þ]/.test(line);
+  const isShort = line.split(/\s+/).length <= 10;
+  const isTitleLike = /^[A-ZÀ-ÖØ-Þ0-9][^.!?]*$/.test(line); 
+  return hasUppercase && isShort && isTitleLike;
 }
 
 function formatInlineText(text: string) {
